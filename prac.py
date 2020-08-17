@@ -143,45 +143,6 @@ def linkpath_calculation():
                         if (j not in link_history[m]):
                             link_history[m].append(j)
 
-
-''' ---------------------------------------------------------------------
----------------------CLASS   FOR   CAR  ANIMATION------------------------
--------------------------------------------------------------------------'''
-#GUI related
-class ImageButton(tkinter.Button):
-
-    def load(self, im):
-        if isinstance(im, str):
-            im = Image.open(im)
-        frames = []
-
-        try:
-            for i in count(1):
-                frames.append(ImageTk.PhotoImage(im.copy()))
-                im.seek(i)
-        except EOFError:
-            pass
-        self.frames = cycle(frames)
-
-        try:
-            self.delay = im.info['duration']
-        except:
-            self.delay = 100
-
-        if len(frames) == 1:
-            self.config(image=next(self.frames))
-        else:
-            self.next_frame()
-
-    def unload(self):
-        self.config(image=None)
-        self.frames = None
-
-    def next_frame(self):
-        if self.frames:
-            self.config(image=next(self.frames))
-            self.after(self.delay, self.next_frame)
-
 ''' -------------------------------------------------------------------------------
 -------------------FUNCTION TO TAKE EDGE DETAILS FROM THE USER---------------------
 -----------------------------------------------------------------------------------'''
@@ -312,10 +273,7 @@ def start_simulation():
     for item in alist:
         item.destroy()
 
-    #GUI related
-    lbl = ImageButton(root, text='Simulation In Progress.....', fg='orange', bg='black',font=("Times New Roman", 30, "bold"), compound=tkinter.TOP, command=flow_visual)
-    lbl.pack(fill = 'both',expand ='YES')
-    lbl.load('D:\\Node_practice\\car.gif')
+    flow_visual()  # Calling the flow visualization method
 
     # Updating the edge dictionary storing length width density and cell number corresponding to a particular link
     for i in range(len(param)):
