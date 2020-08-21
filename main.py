@@ -86,71 +86,9 @@ def linkpath_calculation():
                         if (j not in link_history[m]):
                             link_history[m].append(j)
 
-''' -------------------------------------------------------------------------------
--------------------FUNCTION TO TAKE OD DETAILS FROM THE USER-----------------------
------------------------------------------------------------------------------------'''
-#GUI related
-def OD_details(OD_,links):
-    count = 0
-    global param,OD_pairs,label2,flag,node_count,edge_count,average_speed,link_density,average_time
-    x = int(links.get())
-    for i in OD_pairs:
-        for j in i:
-            j.destroy()
-        for k in label2:
-            k.destroy()
-    lab1 = Label(root, text="ORIGIN")
-    lab1.grid(row=x+8, column=5, sticky='NSEW')
-    lab2 = Label(root, text="DESTINATION")
-    lab2.grid(row=x+8, column=6, sticky='NSEW')
-    label2 = [lab1,lab2]
-    for j in range(int(OD_.get())):
-        lab = Label(root, text = 'OD Pair '+str(j+1))
-        lab.grid(row = x+9+j,column = 4,sticky = 'NSEW')
-        label2.append(lab)
-        origin = Entry(root)
-        origin.grid(row=x+9+j, column=5, sticky='NSEW')
-        destination = Entry(root)
-        destination.grid(row=x+9+j, column=6, sticky='NSEW')
-        OD_pairs.append([origin,destination])
-        count = x+9+j
-    edge_count = int(links.get())
-    node_count = int(nodes.get())
-    average_speed = [[[0 for i in range(4)] for j in range(simtime)] for k in range(edge_count)]
-    link_density = [[0 for i in range(4)] for j in range(edge_count)]
-    average_time = [[[0 for i in range(4)] for j in range(simtime)] for k in range(edge_count)]
-    submit = Button(root, text='Generate Network', fg='blue', bg='white', font=("Times New Roman", 20, "bold"),command=lambda: generate_graph(param, count))
-    if(flag==0):
-        flag+=1
-        submit.grid(row= max(count + 1,16), column=1, pady='50')
 
-''' -------------------------------------------------------------------------------
--------------------FUNCTION TO GENERATE GRAPH BASED ON INPUT DATA------------------
------------------------------------------------------------------------------------'''
-#GUI related
-def generate_graph(param,count):
-    global node_count,edge_count
-    G = nx.Graph()
-    edges = []
-    node = [i+1 for i in range(node_count)]
-    start, end, length, width, density = zip(*param)
-    for i in range(edge_count):
-        edges.append([int(start[i].get()),int(end[i].get())])
-    G.add_nodes_from(node)
-    G.add_edges_from(edges)
-    edge_label = defaultdict(int)
-    node_label = defaultdict(int)
-    for i in range(len(edges)):
-        edge_label[tuple(edges[i])] = i+1
-    for i in range(len(node)):
-        node_label[i+1] = i+1
-    pos = nx.random_layout(G)
-    nx.draw_networkx_nodes(G,pos,nodelist = node)
-    nx.draw_networkx_edges(G,pos,edgelist= edges,edge_color='r')
-    nx.draw_networkx_labels(G,pos,labels = node_label,font_size=16)
-    nx.draw_networkx_edge_labels(G,pos,edge_labels= edge_label)
-    sim = Button(root, text='Start Simulation', fg='blue', bg='white', font=("Times New Roman", 20, "bold"),command= start_simulation).grid(row= max(count + 2,17), column=1, pady='20')
-    plt.show()
+
+
 
 ''' -------------------------------------------------------------------------------
 ----------------------------FUNCTION TO START SIMULATION --------------------------

@@ -5,6 +5,7 @@ from imports import defaultdict
 -------------------------------------------------------------------------'''
 
 root = "" # root tkinter element
+classes = 4 # Number of classes of vehicles
 node_count = 0   # Stores the number of nodes in the network
 edge_count = 0  # Stores the number of links in the network
 edges = defaultdict(lambda: defaultdict(list))   # Dictionary to store length,width,density and corresponding links
