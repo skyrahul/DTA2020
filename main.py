@@ -1,64 +1,7 @@
-'''------------------------------------------------------------------------
------------------------------LIBRARIES IMPORT------------------------------
----------------------------------------------------------------------------'''
+from edge_details import *;
+from imports import *;
+from initialize import *;
 
-import math    #math library to use math function like power and square root
-import time     # time library to update the simulation animation after a fixed interval of time
-import itertools    #itertools library to use some of the functions
-import tkinter      #tkinter library for building the entire GUI
-import random       # not used but can be used to have a random demand input at a node
-from tkinter import *   #importing all the classes from tkinter library
-import networkx as nx   #For making the graphic visualization of the network
-import matplotlib.pyplot as plt     #For drawing the charts and statistics associated with the results
-from PIL import Image, ImageTk      #For displaying the car animation during the program run
-from itertools import count, cycle  #For iterating through the frames of the GIF
-from functools import partial       #Use of a method from this library for computation
-from collections import defaultdict     #dictionaries to store key-value pairs
-import openpyxl     #openpyxl library to print data into the excel files
-import pandas as pd     #not used but can be used in place of openpyxl
-wb = openpyxl.load_workbook('G:\\result.xlsx')       #Loading the excel file for writing the calculated data
-sheet = wb.active   #Taking a particular sheet from the workbook
-''' ---------------------------------------------------------------------
---------------------------------GLOBAL PARAMETERS------------------------
--------------------------------------------------------------------------'''
-
-node_count = 0   # Stores the number of nodes in the network
-edge_count = 0  # Stores the number of links in the network
-edges = defaultdict(lambda: defaultdict(list))   # Dictionary to store length,width,density and corresponding links
-edge_pairs = []  # Edge pairs corresponding to the network
-OD = []  # Stores the OD pairs corresponding to the network
-param = [] # Stores the parameters input through the GUI, once the simulation starts no use
-label = [] # Stores the labels of the GUI, once the simulation starts all label gets destroyed except visualization window
-OD_pairs = [] # Input from the GUI related to OD pairs
-labelvis = [] # Another list to store the labels of the GUI
-label2 = []  # Another list to store the labels of the GUI
-flag = 0 # To check if generate network button comes only once
-incoming_links = defaultdict(list)  # Stores the incoming links corresponding to each node
-outgoing_links = defaultdict(list)  # Stores the outgoing links corresponding to each node
-incoming_flows = defaultdict(list)  # incoming flows to nodes
-zipped = []     # Not of use
-origin = []     # contains all the origins of O-D pairs
-destination = []    # contains all the destinations of O-D pairs
-OD_dict = defaultdict(lambda: defaultdict(list))    # O-D dict to store all paths from every node to every possible destination
-all_paths = []  #temporary variable
-b = [0.695,0.625,0.40,0.748]  # Parameter for calculation of flow_max in the first cell
-area = [0.00000108,0.00000364,0.0000064,0.00001430] # area of each vehicle class
-AO_critical = [0.59,0.5,0.5,0.23] # critical area occupancy for each class
-AOmax = [0.89,0.83,0.83,0.5] # maximum area occupancy for each class
-free_flow_speed = [45.0,42.0,52.0,47.0] # free_flow_speed for each class
-jam_density = [0.89,0.78,0.74,0.5] # jam_density for each class
-relaxation_time = [0.00057,0.0007,0.001,0.006] #Relaxation_time for each class
-simtime = 180 # Simulation time in 10 seconds time interval  #have to increase
-dt = 10/3600 # time element in hours
-density,AOnot,equi_speed,speed,flow,AO = [],[],[],[],[],[]  #density, area occupancy excluding a particular vehicle class, equilibrium speed, normal speed, flow, Area_occupancy
-average_speed = []  #average speed for each vehicle class,for each link,for every instant of time
-link_density = [] # link density for each vehicle class for every link
-average_time = [] #average time for each vehicle class,for each link,for every instant of time
-edge_cost = defaultdict(list)   #Stores the travel time cost of each path
-link_paths = defaultdict(list)  #Stores the edges corresponding to a particular path
-link_history = defaultdict(list)    #Stores the destination nodes which a particular link vehicle is entitled to go
-c = 0   #temporary variable
-visual = 0  #temporary variable
 
 ''' ------------------------------------------------------------------------------------------
 Initializing all the parameters like density, AOnot, equi_speed, speed, flow and area occupancy
@@ -142,47 +85,6 @@ def linkpath_calculation():
                     for m in edge:
                         if (j not in link_history[m]):
                             link_history[m].append(j)
-
-''' -------------------------------------------------------------------------------
--------------------FUNCTION TO TAKE EDGE DETAILS FROM THE USER---------------------
------------------------------------------------------------------------------------'''
-# GUI related
-def edge_details(links):
-    global param,label
-    if(len(param)!=0):
-        for i in param:
-            for j in i:
-                j.destroy()
-        for i in label:
-            i.destroy()
-        label = []
-        param = []
-    lab1 = Label(root, text="Start Node")
-    lab1.grid(row=3, column=4, sticky='NSEW')
-    lab2 = Label(root, text="End Node")
-    lab2.grid(row=3, column=5, sticky='NSEW')
-    lab3 = Label(root, text="Length")
-    lab3.grid(row=3, column=6, sticky='NSEW')
-    lab4 = Label(root, text="Width")
-    lab4.grid(row=3, column=7, sticky='NSEW')
-    lab5 = Label(root, text="Density")
-    lab5.grid(row=3, column=8, sticky='NSEW')
-    label = [lab1,lab2,lab3,lab4,lab5]
-    for j in range(int(links.get())):
-        lab = Label(root, text='Link ' + str(j + 1))
-        lab.grid(row=j+4, column=3, sticky='NSEW')
-        label.append(lab)
-        n1 = Entry(root)
-        n1.grid(row=j + 4, column=4, sticky='NSEW')
-        n2 = Entry(root)
-        n2.grid(row=j + 4, column=5, sticky='NSEW')
-        l = Entry(root)
-        l.grid(row=j+4, column=6, sticky='NSEW')
-        w = Entry(root)
-        w.grid(row=j + 4, column=7, sticky='NSEW')
-        d = Entry(root)
-        d.grid(row=j + 4, column=8, sticky='NSEW')
-        param.append([n1,n2,l,w,d])
 
 ''' -------------------------------------------------------------------------------
 -------------------FUNCTION TO TAKE OD DETAILS FROM THE USER-----------------------
@@ -374,43 +276,6 @@ def flow_visual():
     c.create_window(700, 430, anchor='center', height='30', width=146, window=label)
     c.pack()
     dynamic_traffic_assignment()
-
-''' -------------------------------------------------------------------------------
-----------------------------INITIALIZATION OF GUI----------- ----------------------
------------------------------------------------------------------------------------'''
-
-
-'''-----------------------------------------------------
-----------------INCOMING  FLOWS  INITIALIZATION---------
---------------------------------------------------------'''
-
-'''for i in incoming_links:
-    if(i in origin and i in destination):
-        incoming_flows[i] = [0,0,0,0]*(len(incoming_links[i])+2)
-    elif(i in origin or i in destination):
-        incoming_flows[i] = [0,0,0,0]*(len(incoming_links[i])+1)
-    else:
-        incoming_flows[i] = [0,0,0,0]*(len(incoming_links[i]))'''
-
-
-'''-----------------------------------------------------------
-----------------DEMAND  INPUT (ASSUMED CONSTANT --------------
---------------------------------------------------------------'''
-
-'''file = open("demand1.txt", "r")
-demand_data = file.readlines()
-temp=[]
-for i in demand_data:
-    i = i.replace('\t',' ')
-    temp.append(list(map(int,i.split(' '))))
-sum_OD = list(map(sum,zip(*temp)))
-demand = defaultdict(list)
-temp = 0
-for i in OD:
-    demand[tuple(i)] = sum_OD[temp*4:temp*4+4]'''
-
-
-
 
 '''-----------------------------------------------------
 ----------------NODE  MODELLING  FOR  NODES ------------
