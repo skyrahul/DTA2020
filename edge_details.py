@@ -19,7 +19,7 @@ def edge_details(links):
     lab1.grid(row=3, column=4, sticky='NSEW')
     lab2 = Label(root, text="End Node")
     lab2.grid(row=3, column=5, sticky='NSEW')
-    lab3 = Label(root, text="Length (km)")
+    lab3 = Label(root, text="Length (m)")
     lab3.grid(row=3, column=6, sticky='NSEW')
     lab4 = Label(root, text="Width (m)")
     lab4.grid(row=3, column=7, sticky='NSEW')

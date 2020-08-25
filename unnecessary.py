@@ -32,4 +32,14 @@ temp = 0
 for i in OD:
     demand[tuple(i)] = sum_OD[temp*4:temp*4+4]'''
 
-
+file = open('demand1.txt','r+')
+demand = file.readlines()
+for i in range(len(demand)):
+    demand[i] = list(map(int,demand[i].split()))
+f = open('demand.txt','w')
+for i in demand:
+    s=""
+    for j in i[1:]:
+        s+=str(j)+" "
+    f.write(s+"\n")
+f.close()

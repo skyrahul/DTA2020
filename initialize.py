@@ -4,7 +4,7 @@ from imports import defaultdict
 --------------------------------GLOBAL PARAMETERS------------------------
 -------------------------------------------------------------------------'''
 
-root = "" # root tkinter element
+root = None # root tkinter element
 classes = 4 # Number of classes of vehicles
 node_count = 0   # Stores the number of nodes in the network
 edge_count = 0  # Stores the number of links in the network
@@ -43,3 +43,25 @@ link_paths = defaultdict(list)  #Stores the edges corresponding to a particular 
 link_history = defaultdict(list)    #Stores the destination nodes which a particular link vehicle is entitled to go
 c = 0   #temporary variable
 visual = 0  #temporary variable
+demand_input = defaultdict(lambda: defaultdict(list))  # dictionary of dictionary to store the demand input for each O-D pair from the file
+destination_data = defaultdict(list)    #To store the flow accumulating in all the destination nodes and going out of the network
+demand_data = defaultdict(list)     #To store the class wise flow corresponding to
+msa_flow = defaultdict(list)    #To store the previous flow alotted for calcualting the flow acording to msa algorithm
+
+
+''' ------------------------------------------------------------------------------------------
+Initializing all the parameters like density, AOnot, equi_speed, speed, flow and area occupancy
+-----------------------------------------------------------------------------------------------'''
+
+def initialize():
+    global density,AOnot,equi_speed,speed,flow,AO,origin,destination,zipped
+    zipped = list(zip(*OD))
+    origin = zipped[0]
+    destination = zipped[1]
+    for i in edge_pairs:
+        density.append([[0 for j in range(edges[i[0]][i[1]][3] + 1)] for k in range(4)])
+        AOnot.append([[0 for j in range(edges[i[0]][i[1]][3] + 1)] for k in range(4)])
+        equi_speed.append([[0 for j in range(edges[i[0]][i[1]][3] + 1)] for k in range(4)])
+        speed.append([[0 for j in range(edges[i[0]][i[1]][3] + 1)] for k in range(4)])
+        flow.append([[0 for j in range(edges[i[0]][i[1]][3] + 1)] for k in range(4)])
+        AO.append([0 for j in range(edges[i[0]][i[1]][3] + 1)])
